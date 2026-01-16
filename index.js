@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const port = 3000;
 let users = [];
+// Add a new user
 app.post("/user", express.json(), (req, res, next) => {
   let body = req.body;
   fs.readFile("users.json", "utf-8", (err, data) => {
@@ -30,6 +31,49 @@ app.post("/user", express.json(), (req, res, next) => {
 
       res.status(201).json({ message: "User added successfully" });
     });
+  });
+});
+
+// Update user data
+app.patch("/user/:id", express.json(), (req, res, next) => {
+  const userId = req.params.id;
+  const { id, ...newData } = req.body;
+  fs.readFile("users.json", "utf-8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error read file" });
+    }
+    if (data !== "") {
+      users = JSON.parse(data);
+    } else {
+      return res.json({
+        success: false,
+        message: "no users found",
+      });
+    }
+  });
+  //check if the id is correct
+  const userIndex = users.findIndex((user) => user.id == userId);
+
+  if (userIndex === -1) {
+    console.log("userIndex:", userIndex);
+    console.log("sended id:", userId);
+    return res.status(404).json({
+      message: "user Id not found",
+      success: false,
+    });
+  }
+
+  users[userIndex] = {
+    ...users[userIndex],
+    ...newData,
+  };
+
+  fs.writeFileSync("users.json", JSON.stringify(users));
+
+  res.json({
+    message: "User updated successfully",
+    success: true,
+    data: users[userIndex],
   });
 });
 
