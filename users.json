@@ -1,0 +1,33 @@
+[
+  {
+    "name": "Ahmed Hassan",
+    "email": "ahmed.hassan@example.com",
+    "age": 30,
+    "id": 1
+  },
+  { "name": "Sara Ali", "email": "sara.ali@example.com", "age": 42, "id": 2 },
+  {
+    "name": "Mohamed Tarek",
+    "email": "mohamed.tarek@example.com",
+    "age": 29,
+    "id": 3
+  },
+  {
+    "name": "Laila Mostafa",
+    "email": "laila.mostafa@example.com",
+    "age": 35,
+    "id": 4
+  },
+  {
+    "name": "Omar Fathy",
+    "email": "omar.fathy@example.com",
+    "age": 27,
+    "id": 5
+  },
+  {
+    "name": "Hanan Samir",
+    "email": "hanan.samir@example.com",
+    "age": 33,
+    "id": 6
+  }
+]
