@@ -55,14 +55,12 @@ app.patch("/user/:id", express.json(), (req, res, next) => {
   const userIndex = users.findIndex((user) => user.id == userId);
 
   if (userIndex === -1) {
-    console.log("userIndex:", userIndex);
-    console.log("sended id:", userId);
     return res.status(404).json({
       message: "user Id not found",
       success: false,
     });
   }
-
+  const updatedData = Object.keys(newData);
   users[userIndex] = {
     ...users[userIndex],
     ...newData,
@@ -71,9 +69,7 @@ app.patch("/user/:id", express.json(), (req, res, next) => {
   fs.writeFileSync("users.json", JSON.stringify(users));
 
   res.json({
-    message: "User updated successfully",
-    success: true,
-    data: users[userIndex],
+    message: `User (${updatedData.join(", ")}) updated successfully`,
   });
 });
 
