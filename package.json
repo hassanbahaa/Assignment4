@@ -1,0 +1,16 @@
+{
+  "name": "assignemt4",
+  "version": "1.0.0",
+  "description": "assignemt 4 answers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "author": "HassanB",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
