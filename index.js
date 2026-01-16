@@ -9,7 +9,9 @@ app.post("/user", express.json(), (req, res, next) => {
     if (err) {
       return res.status(500).json({ message: "Error read file" });
     }
-    let users = JSON.parse(data);
+    if (data !== "") {
+      users = JSON.parse(data);
+    }
     const existUser = users.find((user) => user.email === body.email);
     if (existUser) {
       return res.status(400).json({ message: "User already exists" });
