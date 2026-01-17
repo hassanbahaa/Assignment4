@@ -3,6 +3,22 @@ const express = require("express");
 const app = express();
 const port = 3000;
 let users = [];
+
+// get all users
+app.get("/user", (req, res, next) => {
+  fs.readFile("users.json", "utf-8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error Get Data" });
+    }
+    if (data !== "") {
+      users = JSON.parse(data);
+    } else {
+      users = [];
+    }
+    res.json({ users });
+  });
+});
+
 // Add a new user
 app.post("/user", express.json(), (req, res, next) => {
   let body = req.body;
