@@ -21,6 +21,11 @@ async function getUsers() {
     return [];
   }
 }
+
+async function saveUser(users) {
+  await fs.writeFile(filePath, JSON.stringify(users, null, 2));
+}
+
 // get all users
 app.get("/user", async (req, res, next) => {
   const users = await getUsers();
@@ -29,33 +34,24 @@ app.get("/user", async (req, res, next) => {
 });
 
 // Add a new user
-app.post("/user", express.json(), (req, res, next) => {
-  let body = req.body;
-  fs.readFile("users.json", "utf-8", (err, data) => {
-    if (err) {
-      return res.status(500).json({ message: "Error read file" });
-    }
-    if (data !== "") {
-      users = JSON.parse(data);
-    }
-    const existUser = users.find((user) => user.email === body.email);
-    if (existUser) {
-      return res.status(400).json({ message: "User already exists" });
-    }
-    if (users.length < 1) {
-      body.id = 1;
-    } else {
-      body.id = users.at(-1).id + 1;
-    }
-    users.push(body);
-
-    fs.writeFile("users.json", JSON.stringify(users), (err) => {
-      if (err) {
-        return res.status(500).json({ message: "Error writing file" });
-      }
-
-      res.status(201).json({ message: "User added successfully" });
-    });
+app.post("/user", async (req, res, next) => {
+  let user = req.body;
+  let users = await getUsers();
+  const existUser = users.find((user) => user.email === user.email);
+  if (existUser) {
+    return res.status(400).json({ message: "User already exists" });
+  }
+  if (users.length < 1) {
+    user.id = 1;
+  } else {
+    user.id = users.at(-1).id + 1;
+  }
+  users.push(user);
+  await saveUser(users);
+  res.status(201).json({
+    message: "User added successfully",
+    success: true,
+    data: user,
   });
 });
 
