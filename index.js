@@ -1,22 +1,31 @@
-const fs = require("node:fs");
+const fs = require("node:fs/promises");
 const express = require("express");
+const path = require("node:path");
 const app = express();
+app.use(express.json());
 const port = 3000;
-let users = [];
-
-// get all users
-app.get("/user", (req, res, next) => {
-  fs.readFile("users.json", "utf-8", (err, data) => {
-    if (err) {
-      return res.status(500).json({ message: "Error Get Data" });
-    }
+// let users = [];
+const filePath = path.resolve("./users.json");
+async function getUsers() {
+  let users = [];
+  try {
+    const data = await fs.readFile(filePath);
     if (data !== "") {
       users = JSON.parse(data);
     } else {
       users = [];
     }
-    res.json({ users });
-  });
+    return users;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+// get all users
+app.get("/user", async (req, res, next) => {
+  const users = await getUsers();
+
+  res.json(users);
 });
 
 // Add a new user
