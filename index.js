@@ -4,7 +4,6 @@ const path = require("node:path");
 const app = express();
 app.use(express.json());
 const port = 3000;
-// let users = [];
 const filePath = path.resolve("./users.json");
 async function getUsers() {
   let users = [];
@@ -60,10 +59,8 @@ app.patch("/user/:id", async (req, res, next) => {
   const userId = req.params.id;
   const { id, ...newData } = req.body;
   let users = await getUsers();
-
   //check if the id is correct
   const userIndex = users.findIndex((user) => user.id == userId);
-
   if (userIndex === -1) {
     return res.status(404).json({
       message: "user Id not found",
@@ -75,9 +72,7 @@ app.patch("/user/:id", async (req, res, next) => {
     ...users[userIndex],
     ...newData,
   };
-
   await saveUser(users);
-
   res.json({
     message: `User (${updatedData.join(", ")}) updated successfully`,
     success: true,
@@ -91,7 +86,6 @@ app.delete("/user/:id", async (req, res, next) => {
   let users = await getUsers();
   //check if the id is correct
   const userIndex = users.findIndex((user) => user.id == userId);
-
   if (userIndex === -1) {
     return res.status(404).json({
       message: "user Id not found",
@@ -99,9 +93,7 @@ app.delete("/user/:id", async (req, res, next) => {
     });
   }
   users.splice(userIndex, 1);
-
   await saveUser(users);
-
   res.json({
     message: "User deleted successfully",
   });
