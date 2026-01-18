@@ -86,21 +86,9 @@ app.patch("/user/:id", async (req, res, next) => {
 });
 
 // delete user data
-app.delete("/user/:id", (req, res, next) => {
+app.delete("/user/:id", async (req, res, next) => {
   const userId = req.params.id;
-  fs.readFile("users.json", "utf-8", (err, data) => {
-    if (err) {
-      return res.status(500).json({ message: "Error read file" });
-    }
-    if (data !== "") {
-      users = JSON.parse(data);
-    } else {
-      return res.json({
-        success: false,
-        message: "no users found",
-      });
-    }
-  });
+  let users = await getUsers();
   //check if the id is correct
   const userIndex = users.findIndex((user) => user.id == userId);
 
@@ -112,7 +100,7 @@ app.delete("/user/:id", (req, res, next) => {
   }
   users.splice(userIndex, 1);
 
-  fs.writeFileSync("users.json", JSON.stringify(users));
+  await saveUser(users);
 
   res.json({
     message: "User deleted successfully",
