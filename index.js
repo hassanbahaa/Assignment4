@@ -146,6 +146,12 @@ app.get("/user/:id", async (req, res, next) => {
   res.json(user);
 });
 
+// invalid url route
+app.use((req, res) => {
+  res.status(404).json({
+    message: "Invalid URL",
+  });
+});
 app.listen(port, () => {
   console.log("The server is running on port:", port);
 });
