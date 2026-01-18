@@ -34,23 +34,23 @@ app.get("/user", async (req, res, next) => {
 
 // Add a new user
 app.post("/user", async (req, res, next) => {
-  let user = req.body;
+  let newUser = req.body;
   let users = await getUsers();
-  const existUser = users.find((user) => user.email === user.email);
+  const existUser = users.find((user) => user.email === newUser.email);
   if (existUser) {
     return res.status(400).json({ message: "User already exists" });
   }
   if (users.length < 1) {
-    user.id = 1;
+    newUser.id = 1;
   } else {
-    user.id = users.at(-1).id + 1;
+    newUser.id = users.at(-1).id + 1;
   }
-  users.push(user);
+  users.push(newUser);
   await saveUser(users);
   res.status(201).json({
     message: "User added successfully",
     success: true,
-    data: user,
+    data: newUser,
   });
 });
 
