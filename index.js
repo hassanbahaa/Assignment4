@@ -132,6 +132,20 @@ app.get("/user/filter", async (req, res, next) => {
   res.json(filterUsers);
 });
 
+// get user by id
+app.get("/user/:id", async (req, res, next) => {
+  const userId = req.params.id;
+  let users = await getUsers();
+  const user = users.find((user) => user.id == userId);
+  if (!user) {
+    return res.status(404).json({
+      message: "user Id not found",
+      success: false,
+    });
+  }
+  res.json(user);
+});
+
 app.listen(port, () => {
   console.log("The server is running on port:", port);
 });
