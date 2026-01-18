@@ -120,6 +120,18 @@ app.get("/user/getByName", async (req, res, next) => {
   res.json({ user });
 });
 
+//get users by age filter
+app.get("/user/filter", async (req, res, next) => {
+  const minAge = req.query.minAge;
+  let users = await getUsers();
+  const filterUsers = users.filter((user) => user.age >= minAge);
+  // console.log({ filterUsers });
+  if (filterUsers == []) {
+    return res.status(404).json({ message: "No user found!" });
+  }
+  res.json(filterUsers);
+});
+
 app.listen(port, () => {
   console.log("The server is running on port:", port);
 });
