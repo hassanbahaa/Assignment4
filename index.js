@@ -56,22 +56,11 @@ app.post("/user", async (req, res, next) => {
 });
 
 // Update user data
-app.patch("/user/:id", express.json(), (req, res, next) => {
+app.patch("/user/:id", async (req, res, next) => {
   const userId = req.params.id;
   const { id, ...newData } = req.body;
-  fs.readFile("users.json", "utf-8", (err, data) => {
-    if (err) {
-      return res.status(500).json({ message: "Error read file" });
-    }
-    if (data !== "") {
-      users = JSON.parse(data);
-    } else {
-      return res.json({
-        success: false,
-        message: "no users found",
-      });
-    }
-  });
+  let users = await getUsers();
+
   //check if the id is correct
   const userIndex = users.findIndex((user) => user.id == userId);
 
@@ -87,10 +76,12 @@ app.patch("/user/:id", express.json(), (req, res, next) => {
     ...newData,
   };
 
-  fs.writeFileSync("users.json", JSON.stringify(users));
+  await saveUser(users);
 
   res.json({
     message: `User (${updatedData.join(", ")}) updated successfully`,
+    success: true,
+    data: users[userIndex],
   });
 });
 
