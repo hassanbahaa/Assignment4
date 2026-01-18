@@ -108,23 +108,16 @@ app.delete("/user/:id", async (req, res, next) => {
 });
 
 // get user by name
-app.get("/user/getByName", (req, res, next) => {
+app.get("/user/getByName", async (req, res, next) => {
   const name = req.query.name;
-  fs.readFile("users.json", "utf-8", (err, data) => {
-    if (err) {
-      return res.status(500).json({ message: "Error read file" });
-    }
-    if (data !== "") {
-      users = JSON.parse(data);
-    }
-    const user = users.find((user) =>
-      user.name.toLowerCase().includes(name.toLowerCase())
-    );
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    res.json({ user });
-  });
+  let users = await getUsers();
+  const user = users.find((user) =>
+    user.name.toLowerCase().includes(name.toLowerCase())
+  );
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  res.json({ user });
 });
 
 app.listen(port, () => {
